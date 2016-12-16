@@ -1,4 +1,5 @@
 <%@ page pageEncoding="UTF-8" %>
+<%@ page import="web.struct.Personne" %>
 <!DOCTYPE html>
 <html lang="fr">
 	<head>
