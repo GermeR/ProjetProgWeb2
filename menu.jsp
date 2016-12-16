@@ -11,21 +11,21 @@
 <body>
 	<div class="container">
 	<div class="page-header">
-<center>
+	<center>
 	<h1 class="display-1">MENU PRINCIPAL</h1><br>
-	<% if(session.getAttribute("personne").getRole().equals("etu"))
+	<% if(((Personne)session.getAttribute("personne")).getRole().equals("etu"))
 	out.println("<li role='presentation' class='btn btn-default btn-lg'><a href='Select'>Consulter vos absences</a></li>");
 	%>
-	<% if(session.getAttribute("personne").getRole().equals("prof") || session.getAttribute("personne").getRole().equals("secr"))
+	<% if(((Personne)session.getAttribute("personne")).getRole().equals("prof") || ((Personne)session.getAttribute("personne")).getRole().equals("secr"))
 	out.println("<li role='presentation' class='btn btn-default btn-lg'><a href='Select'>Consulter toutes les absences</a></li>");
 	%>
-	<% if(session.getAttribute("personne").getRole().equals("prof"))
+	<% if(((Personne)session.getAttribute("personne")).getRole().equals("prof"))
 	out.println("<li role='presentation' class='btn btn-default btn-lg'><a href='Select'>Ajouter des absences</a></li>");
 	%>
-	<% if(session.getAttribute("personne").getRole().equals("secr"))
+	<% if(((Personne)session.getAttribute("personne")).getRole().equals("secr"))
 	out.println("<li role='presentation' class='btn btn-default btn-lg'><a href='Select'>Justifier des absences</a></li>");
 	%>
-</center>
+	</center>
 </body>
 </html>
 
