@@ -37,7 +37,7 @@ public class JustificatifAjout extends HttpServlet {
 					+ "</div>"
 					+ "<div class='row'>"
 					+ "<div class='col-xs-12'>"
-					+ "<form id=\"loginForm\" action=\"addabs\" method=\"POST\">"
+					+ "<form id=\"loginForm\" action=\"InsertJustif\" method=\"POST\">"
 					+ "<div class='form-group'>"
 					+ "<label for='inputLogin' class='col-sm-2 control-label'>Nom de l'etudiant</label>"
 					+ "<div class='col-sm-10'>"

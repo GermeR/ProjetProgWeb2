@@ -16,13 +16,13 @@ import javax.servlet.http.HttpSession;
 
 import web.struct.Personne;
 
-@WebServlet("/servlet/log")
+@WebServlet("/servlet/InsertJustif")
 public class InsertJustif extends HttpServlet {
-	
+
 	static final String NOM = "germer";
 	static final String MDP = "moi";
 	static final String URL = "jdbc:postgresql://psqlserv/n3p1";
-	
+
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
@@ -31,22 +31,22 @@ public class InsertJustif extends HttpServlet {
 		Connection con = null;
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sql="";
-		if(req.getParameter("datefin")==null || req.getParameter("datefin")==req.getParameter("date")){
-			sql="INSERT INTO justif VALUES ('"+req.getParameter("login")+"','"+req.getParameter("date")+"')";
-		}
-		System.out.println(sql);
+
+		String sql = "update absences set justifie =true where login='" + req.getParameter("login")
+				+ "' and date between '" + req.getParameter("date") + "' and '" + req.getParameter("datefin") + "'";
+
 		try {
 			Class.forName("org.postgresql.Driver");
 			con = DriverManager.getConnection(URL, NOM, MDP);
 			stmt = con.createStatement();
-			System.out.println(sql);
 			stmt.execute(sql);
+			sql = "insert into justif (login,datedeb,datefin) values ('" + req.getParameter("login") + "','"
+					+ req.getParameter("date") + "','" + req.getParameter("datefin") + "');";
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		res.sendRedirect("../servlet/justif");
-	}	
+	}
 }
