@@ -31,14 +31,17 @@ public class InsertJustif extends HttpServlet {
 		Connection con = null;
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sql = "
+		String sql="";
+		if(req.getParameter("datefin")==null || req.getParameter("datefin")==req.getParameter("date")){
+			sql="INSERT INTO justif VALUES ('"+req.getParameter("login")+"','"+req.getParameter("date")+"')";
+		}
 		System.out.println(sql);
 		try {
 			Class.forName("org.postgresql.Driver");
 			con = DriverManager.getConnection(URL, NOM, MDP);
 			stmt = con.createStatement();
 			System.out.println(sql);
-			rs = stmt.execute(sql);
+			stmt.execute(sql);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
