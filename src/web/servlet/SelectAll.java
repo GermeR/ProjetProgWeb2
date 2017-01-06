@@ -18,8 +18,8 @@ import javax.servlet.http.HttpSession;
 
 import web.struct.Personne;
 
-@WebServlet("/servlet/Select")
-public class Select extends HttpServlet {
+@WebServlet("/servlet/SelectAll")
+public class SelectAll extends HttpServlet {
 
 	static final String NOM = "germer";
 	static final String MDP = "moi";
@@ -30,33 +30,28 @@ public class Select extends HttpServlet {
 
 		PrintWriter out = res.getWriter();
 		HttpSession session = req.getSession();
-		
-		if (((Personne)session.getAttribute("personne")) == null) {
+
+		if (((Personne) session.getAttribute("personne")) == null) {
 			System.out.println("ohfdvk:ugesdlihvdsm!xiwfhgvlisdwfligvol:wqsegrfvoligsewo:lgr:ol");
 		}
-		
+
 		Connection con = null;
 		Statement stmt = null;
 		ResultSet rsAbs = null;
 		ResultSet rsJus = null;
-		
-		String sql = "SELECT p.prenom,p.nom,a.date,a.demiJ FROM personne as p inner join absences as a on a.login = p.login WHERE p.role = 'etu' and p.login='"
-				+ ((Personne) session.getAttribute("personne")).getLogin() + "';";
-		
-		String sqlJus = "SELECT date from justif where login='"
-				+ ((Personne) session.getAttribute("personne")).getLogin() + "';";
 
+		String sql = "SELECT p.prenom,p.nom,a.date,a.demiJ FROM personne as p inner join absences as a on a.login = p.login WHERE p.role = 'etu' and p.login='";
+		ArrayList<String> personnes = new ArrayList<String>();
+		String sqlJus = "SELECT date from justif where login='";
 		ArrayList<String> justifs = new ArrayList<String>();
 
 		try {
 			Class.forName("org.postgresql.Driver");
 			con = DriverManager.getConnection(URL, NOM, MDP);
 			stmt = con.createStatement();
-			rsJus = stmt.executeQuery(sqlJus);
-			while (rsJus.next()) {
-				justifs.add(rsJus.getString(1));
-			}
-			rsAbs = stmt.executeQuery(sql);
+			ResultSet rs = stmt.executeQuery("Select login from personne where role ='etu';");
+			while (rs.next())
+				personnes.add(rs.getString(1));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -72,14 +67,21 @@ public class Select extends HttpServlet {
 		out.println("<center><table class='table table-bordered'>");
 		try {
 			out.println("<th>prenom</th><th>nom</th><th>date</th><th>horaire</th><th>Justifie</th>");
-			while (rsAbs.next()) {
-				if (justifs.contains(rsAbs.getString(3)))
-					out.println("<tr><td>" + rsAbs.getString(1) + "</td><td>" + rsAbs.getString(2) + "</td><td>"
-							+ rsAbs.getString(3) + "</td><td>" + rsAbs.getString(4) + "</td><td>oui</td></tr>");
-				else
-					out.println("<tr><td>" + rsAbs.getString(1) + "</td><td>" + rsAbs.getString(2) + "</td><td>"
-							+ rsAbs.getString(3) + "</td><td>" + rsAbs.getString(4) + "</td><td>non</td></tr>");
+			for (String str : personnes) {
+				rsJus = stmt.executeQuery(sqlJus+str+"';");
+				while (rsJus.next()) {
+					justifs.add(rsJus.getString(1));
+				}
+				rsAbs = stmt.executeQuery(sql+str+"';");
+				while (rsAbs.next()) {
+					if (justifs.contains(rsAbs.getString(3)))
+						out.println("<tr><td>" + rsAbs.getString(1) + "</td><td>" + rsAbs.getString(2) + "</td><td>"
+								+ rsAbs.getString(3) + "</td><td>" + rsAbs.getString(4) + "</td><td>oui</td></tr>");
+					else
+						out.println("<tr><td>" + rsAbs.getString(1) + "</td><td>" + rsAbs.getString(2) + "</td><td>"
+								+ rsAbs.getString(3) + "</td><td>" + rsAbs.getString(4) + "</td><td>non</td></tr>");
 
+				}
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();

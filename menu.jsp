@@ -18,7 +18,7 @@
 	out.println("<li role='presentation' class='btn btn-default btn-lg'><a href='servlet/Select'>Consulter vos absences</a></li>");
 	%>
 	<% if(((Personne)session.getAttribute("personne")).getRole().equals("prof") || ((Personne)session.getAttribute("personne")).getRole().equals("secr"))
-	out.println("<li role='presentation' class='btn btn-default btn-lg'><a href='Select'>Consulter toutes les absences</a></li>");
+	out.println("<li role='presentation' class='btn btn-default btn-lg'><a href='servlet/SelectAll'>Consulter toutes les absences</a></li>");
 	%>
 	<% if(((Personne)session.getAttribute("personne")).getRole().equals("prof"))
 	out.println("<li role='presentation' class='btn btn-default btn-lg'><a href='servlet/abs'>Ajouter des absences</a></li>");
