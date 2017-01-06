@@ -21,7 +21,7 @@ public class AbsenceAjout extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		HttpSession session = req.getSession(true);
-		if (session.getAttribute("login")==null)
+		if (session.getAttribute("login")==null || session==null)
 			res.sendRedirect("../login.html");
 		else if(((Personne) (session.getAttribute("personne"))).getRole().equals("prof")){ 
 			PrintWriter out = res.getWriter();
@@ -37,7 +37,7 @@ public class AbsenceAjout extends HttpServlet {
 					+ "</div>"
 					+ "<div class='row'>"
 					+ "<div class='col-xs-12'>"
-					+ "<form class='form-horizontal' method='get' action='New2'>"
+					+ "<form id=\"loginForm\" action=\"addabs\" method=\"POST\">"
 					+ "<div class='form-group'>"
 					+ "<label for='inputLogin' class='col-sm-2 control-label'>Nom de l'etudiant</label>"
 					+ "<div class='col-sm-10'>"
@@ -45,20 +45,14 @@ public class AbsenceAjout extends HttpServlet {
 					+ "</div>"
 					+ "</div>"
 					+ "<div class='form-group'>"
-					+ "<label for='inputDateDeb' class='col-sm-2 control-label'>Date de debut</label>"
+					+ "<label for='inputDateDeb' class='col-sm-2 control-label'>Date</label>"
 					+ "<div class='col-sm-10'>"
-					+ "<input type='text' class='form-control' id='inputPassword' name='mdp'>"
+					+ "<input type='date' class='form-control' id='inputPassword' name='date'>"
 					+ "</div>"
 					+ "</div>"
 					+ "<div class='form-group'>"
-					+ "<br>A partir du Matin <INPUT type=\"checkbox\" name=\"choix1\" value=\"1\"> "
-					+ "A partir de l'Apres-Midi<INPUT type=\"checkbox\" name=\"choix2\" value=\"2\">"
-					+ "<br>"
-					+ "<label for='inputDateFin' class='col-sm-2 control-label'>Date de Fin</label>"
-					+ "<div class='col-sm-10'>"
-					+ "<input type='text' class='form-control' id='inputNom' name='nom'>"
-					+ "</div></div><br>A partir du Matin <INPUT type=\"checkbox\" name=\"choix3\" value=\"3\"> "
-					+ "A partir de l'Apres-Midi<INPUT type=\"checkbox\" name=\"choix4\" value=\"4\">"
+					+ "<br>A partir du Matin <INPUT type=\"checkbox\" name=\"matin\" value=\"matin\"> "
+					+ "A partir de l'Apres-Midi<INPUT type=\"checkbox\" name=\"soir\" value=\"soir\">"
 					+ "<br>"
 					+ "<div class='form-group'>"
 					+ "<div class='col-sm-offset-2 col-sm-10'>"
