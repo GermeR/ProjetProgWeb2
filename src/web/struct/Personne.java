@@ -1,6 +1,7 @@
 package web.struct;
 
 public class Personne {
+	
 	private String login;
 	private String prenom;
 	private String nom;
