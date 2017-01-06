@@ -24,7 +24,7 @@
 	out.println("<li role='presentation' class='btn btn-default btn-lg'><a href='servlet/abs'>Ajouter des absences</a></li>");
 	%>
 	<% if(((Personne)session.getAttribute("personne")).getRole().equals("secr"))
-	out.println("<li role='presentation' class='btn btn-default btn-lg'><a href='Select'>Justifier des absences</a></li>");
+	out.println("<li role='presentation' class='btn btn-default btn-lg'><a href='servlet/justif'>Justifier des absences</a></li>");
 	%>
 	</center>
 </body>
