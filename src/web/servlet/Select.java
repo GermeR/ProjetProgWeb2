@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,42 +34,48 @@ public class Select extends HttpServlet {
 
 		Connection con = null;
 		Statement stmt = null;
-		ResultSet rs = null;
+		ResultSet rsAbs = null;
+		ResultSet rsJus = null;
 		String sql = "SELECT p.prenom,p.nom,a.date,a.demiJ FROM personne as p inner join absences as a on a.login = p.login WHERE p.role = 'etu' and p.login='"
-				+ ((Personne) session.getAttribute("personne")).getLogin() + "' ;";
+				+ ((Personne) session.getAttribute("personne")).getLogin() + "';";
+
+		String sqlJus = "SELECT date from justif where login='"
+				+ ((Personne) session.getAttribute("personne")).getLogin() + "';";
+
+		ArrayList<String> justifs = new ArrayList<String>();
+
 		try {
 			Class.forName("org.postgresql.Driver");
 			con = DriverManager.getConnection(URL, NOM, MDP);
 			stmt = con.createStatement();
-			System.out.println(sql);
-			rs = stmt.executeQuery(sql);
+			rsJus = stmt.executeQuery(sqlJus);
+			while (rsJus.next()) {
+				justifs.add(rsJus.getString(1));
+			}
+			rsAbs = stmt.executeQuery(sql);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		affich(out,rs);
-
-		try {
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void affich(PrintWriter out, ResultSet rs) {
-		out.println("<html>");
-		out.println("<head>");
-		out.println("<title>Vos Absences</title>");
-		out.println("<head>");
+		out.println("<!DOCTYPE html><html lang='fr'>"
+				+ "<head><meta charset='utf-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1'>"
+				+ "<title>Vos Absences</title>"
+				+ "<!-- Bootstrap core CSS --><link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'>"
+				+ "</head>");
 		out.println("<body>");
-		out.println("<center><table>");
+		out.println("<center><table class='table table-bordered'>");
 		try {
-			out.println("<th>prenom</th> <th>nom</th> <th>date</th> <th>horaire</th>");
-			while (rs.next()) {
-				out.println("<tr><td>" + rs.getString(1) + "</td><td>" + rs.getString(2) + "</td><td>" + rs.getString(3)
-						+ "</td><td>" + rs.getString(4) + "</td></tr>");
+			out.println("<th>prenom</th><th>nom</th><th>date</th><th>horaire</th><th>Justifie</th>");
+			while (rsAbs.next()) {
+				if (justifs.contains(rsAbs.getString(3)))
+					out.println("<tr><td>" + rsAbs.getString(1) + "</td><td>" + rsAbs.getString(2) + "</td><td>"
+							+ rsAbs.getString(3) + "</td><td>" + rsAbs.getString(4) + "</td><td>oui</td></tr>");
+				else
+					out.println("<tr><td>" + rsAbs.getString(1) + "</td><td>" + rsAbs.getString(2) + "</td><td>"
+							+ rsAbs.getString(3) + "</td><td>" + rsAbs.getString(4) + "</td><td>non</td></tr>");
+
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -76,5 +83,11 @@ public class Select extends HttpServlet {
 		out.println("</table><center>");
 		out.println("</body>");
 		out.println("</html>");
+
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
